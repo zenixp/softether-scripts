@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Auto-install dependencies and build SoftEther VPN Client
 
-# 1. Extract the package
+# 1. Check for input argument
 if [ -z "$1" ]; then
     echo "Usage: $0 <softether-vpnclient-package.tar.gz>"
     exit 1
@@ -30,20 +30,30 @@ fi
 echo "Detected OS: $OS"
 
 # 5. Install dependencies
-if [[ "$OS" =~ ^(centos|rhel|rocky|almalinux|fedora)$ ]]; then
-    echo "Installing dependencies using yum..."
-    yum -y install gcc zlib-devel openssl-devel readline-devel ncurses-devel
-elif [[ "$OS" =~ ^(debian|ubuntu)$ ]]; then
-    echo "Installing dependencies using apt-get..."
-    apt-get update -y
-    apt-get install -y build-essential
+case "$OS" in
+    centos|rhel|rocky|almalinux|fedora)
+        echo "Installing dependencies using yum..."
+        yum -y install gcc zlib-devel openssl-devel readline-devel ncurses-devel
+        ;;
+    debian|ubuntu)
+        echo "Installing dependencies using apt-get..."
+        apt-get update -y
+        apt-get install -y build-essential
+        ;;
+    *)
+        echo "⚠️ Unsupported OS detected. Please install dependencies manually."
+        exit 1
+        ;;
+esac
+
+# 6. Build SoftEther VPN Client
+if [ -d "vpnclient" ]; then
+    cd vpnclient || exit 1
 else
-    echo "⚠️ Unsupported OS detected. Please install dependencies manually."
+    echo "❌ 'vpnclient' directory not found after extraction."
     exit 1
 fi
 
-# 6. Build SoftEther VPN Client
-cd vpnclient || { echo "❌ vpnclient directory not found."; exit 1; }
 make
 
 echo "✅ SoftEther VPN Client build completed successfully."
