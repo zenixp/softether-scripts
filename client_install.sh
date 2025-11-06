@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 # Auto-install dependencies and build SoftEther VPN Client
 
 # 1. Check for input argument
