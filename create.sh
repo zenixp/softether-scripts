@@ -69,5 +69,5 @@ AccountConnect $VPN_ACCOUNT
 AccountList
 EOF
 
-$BASEDIR/vpncmd /client localhost /in:./setup.txt
+$BASEDIR/vpncmd /client localhost /in:$BASEDIR/setup.txt
 rm $BASEDIR/setup.txt
